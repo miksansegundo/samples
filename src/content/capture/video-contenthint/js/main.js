@@ -63,13 +63,13 @@ function call() {
   // constraints) can be applied independently.
   motionStream = srcStream.clone();
   // TODO(pbos): Remove fluid when no clients use it, motion is the newer name.
-  setVideoTrackContentHints(motionStream, 'fluid');
+  // setVideoTrackContentHints(motionStream, 'fluid');
   setVideoTrackContentHints(motionStream, 'motion');
   establishPC(motionVideo, motionStream);
   detailStream = srcStream.clone();
   // TODO(pbos): Remove detailed when no clients use it, detail is the newer
   // name.
-  setVideoTrackContentHints(detailStream, 'detailed');
+  // setVideoTrackContentHints(detailStream, 'detailed');
   setVideoTrackContentHints(detailStream, 'detail');
   establishPC(detailVideo, detailStream);
 }
