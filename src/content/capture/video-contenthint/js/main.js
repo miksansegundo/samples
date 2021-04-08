@@ -8,7 +8,6 @@
 
 'use strict';
 
-const srcVideo = document.getElementById('srcVideo');
 const motionVideo = document.getElementById('motionVideo');
 const detailVideo = document.getElementById('detailVideo');
 
@@ -21,27 +20,42 @@ const offerOptions = {
   offerToReceiveVideo: 1
 };
 
-function maybeCreateStream() {
+localStorage.demioBitrate = localStorage.demioBitrate || 200
+
+function showHint () {
+  document.querySelector('.hint').innerText = 'The settings are now locked. A browser refresh is required to start a new test.'
+}
+
+document.querySelector('#demio-bitrate').addEventListener('blur', function () {
+  localStorage.demioBitrate = this.value
+  showHint()
+  document.querySelectorAll('.demio-bitrate').forEach((element) => {
+    element.innerHTML = this.value
+  })
+})
+
+async function maybeCreateStream(type) {
   if (srcStream) {
     return;
   }
-  if (srcVideo.captureStream) {
-    srcStream = srcVideo.captureStream();
-    call();
-  } else {
-    console.log('captureStream() not supported');
+
+  if (type !== 'screen') {  
+    srcStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true,
+    })
   }
+  if (type === 'screen') {
+    srcStream = await navigator.mediaDevices.getDisplayMedia({
+      video: true,
+      audio: false
+    })
+  }
+  document.querySelector('#demio-bitrate').disabled = true
+  showHint()
+  call();
 }
 
-// Video tag capture must be set up after video tracks are enumerated.
-srcVideo.oncanplay = maybeCreateStream;
-if (srcVideo.readyState >= 3) { // HAVE_FUTURE_DATA
-  // Video is already ready to play, call maybeCreateStream in case oncanplay
-  // fired before we registered the event handler.
-  maybeCreateStream();
-}
-
-srcVideo.play();
 
 function setVideoTrackContentHints(stream, hint) {
   const tracks = stream.getVideoTracks();
@@ -108,7 +122,8 @@ function onSetSessionDescriptionError(error) {
 
 function onCreateAnswerSuccess(pc1, pc2, desc) {
   // Hard-code video bitrate to 50kbps.
-  // desc.sdp = desc.sdp.replace(/a=mid:(.*)\r\n/g, 'a=mid:$1\r\nb=AS:' + 50 + '\r\n');
+  const demioBitrate = localStorage.demioBitrate
+  desc.sdp = desc.sdp.replace(/a=mid:(.*)\r\n/g, 'a=mid:$1\r\nb=AS:' + demioBitrate + '\r\n');
   pc2.setLocalDescription(desc)
       .then(() => pc1.setRemoteDescription(desc))
       .catch(onSetSessionDescriptionError);

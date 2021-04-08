@@ -88,7 +88,11 @@ function call() {
   pc2.oniceconnectionstatechange = e => onIceStateChange(pc2, e);
   pc2.ontrack = gotRemoteStream;
 
-  stream.getTracks().forEach(track => pc1.addTrack(track, stream));
+  stream.getTracks().forEach(track => {
+    if (track.kind === 'video') track.contentHint = 'detail'
+    if (track.kind === 'audio') track.contentHint = 'speech'
+    pc1.addTrack(track, stream)
+  });
   console.log('Added local stream to pc1');
 
   console.log('pc1 createOffer start');

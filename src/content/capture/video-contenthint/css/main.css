@@ -6,10 +6,10 @@
 *  tree.
 */
 
-video {
+video:not(.source) {
   --width: calc(45%);
-  width: var(--width);
-  height: calc(var(--width) * 9 / 16);
+  width: 480px;
+  height: 270px;
   margin: 1em;
   object-fit: cover;
 }
@@ -23,4 +23,18 @@ video {
 #videos {
   text-align: center;
   width: 100%;
+}
+
+.hint {
+  margin: 1em;
+  font-style: italic;
+  font-size: 14px;
+}
+
+label {
+  margin: .5em;
+}
+
+#container.no-wrap {
+  max-width: unset;
 }

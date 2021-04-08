@@ -35,45 +35,31 @@
 
     <h1><a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a> <span>Guiding video encoding with content hints</span>
     </h1>
-
+    <button onclick="maybeCreateStream()">Test Camera & Mic</button>
+    <button onclick="maybeCreateStream('screen')">Test Screen</button>
+    <label>Bitrate: <input id="demio-bitrate" type="number" value="200" /><span class="hint"></span></label>
     <div id="videos">
         <div class="video-container">
-            <h2>Source video file (high bitrate)</h2>
-            <video id="srcVideo" src="../../../video/chrome.mp4" playsinline controls muted loop ></video>
-        </div>
-        <div class="video-container">
-            <h2>"motion" video @ 50kbps</h2>
+            <h2>"motion" video @ <span class="demio-bitrate">200</span>kbps</h2>
             <video id="motionVideo" playsinline autoplay muted></video>
         </div>
         <div class="video-container">
-            <h2>"detail" video @ 50kbps</h2>
+            <h2>"detail" video @ <span class="demio-bitrate">200</span>kbps</h2>
             <video id="detailVideo" playsinline autoplay muted></video>
         </div>
     </div>
-
-    <p>This demo requires Chrome 57.0.2957.0 or later with <strong>Experimental Web Platform features</strong> enabled
-        from <tt>chrome://flags</tt>.</p>
-
-    <p>A stream is captured from the source video using the <code>captureStream()</code> method. The stream is cloned
-        and transmitted via two separate PeerConnections using 50kbps of video bandwidth. This is insufficient to
-        generate good quality in the encoded bitstream, so trade-offs have to be made.</p>
+    <p>A stream is captured from the camera & mic or the screen. The stream is cloned
+        and transmitted via two separate PeerConnections using <span class="demio-bitrate">200</span>kbps of video bandwidth. Around 50Kbps is required to test the content hint because that is insufficient to
+        generate good quality in the encoded bitstream, so trade-offs have to be made and the content hint is used.</p>
 
     <p>The transmitted stream tracks are using <a href="https://www.w3.org/TR/mst-content-hint/">MediaStreamTrack
         Content Hints</a> to indicate characteristics in the video stream, which informs PeerConnection on how to encode
         the track (to prefer motion or individual frame detail).</p>
 
-    <p>The text part of the clip shows a clear case for when <tt>'detail'</tt> is better, and the fighting scene shows a
+    <p>To test the screen-share open <a href="video.html" target="_blank">the screen-share video</a> in another tab or window first. The text part of the clip shows a clear case for when <tt>'detail'</tt> is better, and the fighting scene shows a
         clear case for when <tt>'motion'</tt> is better. The spinning model however shows a case where <tt>'motion'</tt>
         or <tt>'detail'</tt> are not clear-cut decisions and even with good content detection what's preferred depends
         on what the user prefers.</p>
-
-    <p>Other MediaStreamTrack consumers such as MediaStreamRecorder can also make use of this information to guide
-        encoding parameters for the stream without additional extensions to the MediaStreamRecorder specification, but
-        this is currently not implemented in Chromium.</p>
-
-    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/capture/video-contenthint"
-       title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
-
 </div>
 
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
