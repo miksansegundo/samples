@@ -8,10 +8,12 @@
 
 'use strict';
 
+const justVideo = document.getElementById('justVideo');
 const motionVideo = document.getElementById('motionVideo');
 const detailVideo = document.getElementById('detailVideo');
 
 let srcStream;
+let justStream;
 let motionStream;
 let detailStream;
 
@@ -75,6 +77,9 @@ function call() {
   // This creates multiple independent PeerConnections instead of multiple
   // streams on a single PeerConnection object so that b=AS (the bitrate
   // constraints) can be applied independently.
+  justStream = srcStream.clone();
+  setVideoTrackContentHints(justStream, '');
+  establishPC(justVideo, justStream);
   motionStream = srcStream.clone();
   // TODO(pbos): Remove fluid when no clients use it, motion is the newer name.
   // setVideoTrackContentHints(motionStream, 'fluid');
